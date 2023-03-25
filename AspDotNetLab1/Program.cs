@@ -5,6 +5,7 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+app.UseStatusCodePagesWithReExecute("/404.html");
 
 app.MapGet("/", () => "Hello, World!");
 
@@ -14,7 +15,7 @@ app.Map("/home", home =>
     home.Map("/about", About);
 });
 
-
+app.UseFileServer();
 app.UseFileServer(new FileServerOptions
 {
     EnableDirectoryBrowsing = true,
@@ -25,13 +26,9 @@ app.UseFileServer(new FileServerOptions
 app.UseMiddleware<SecretMiddleware>();
 app.UseMiddleware<LoggerMiddleware>();
 
-app.UseExceptionHandler("/Error");
-app.UseStatusCodePagesWithReExecute("/Error/{0}");
-
 
 app.Run();
-
-
+    
 
 void Index(IApplicationBuilder appBuilder)
 {
